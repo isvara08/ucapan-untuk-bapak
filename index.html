@@ -859,7 +859,7 @@
   setTimeout(startAudio, 500);
 
   // Usaha 2: Trik Autoplay - Putar saat ada interaksi SEKECIL APAPUN (scroll, sentuh layar, klik, atau ketik)
-  const interactionEvents = ['click', 'touchstart', 'scroll', 'keydown'];
+  const interactionEvents = ['click', 'touchstart', 'touchend', 'touchmove', 'scroll', 'keydown', 'mousemove', 'pointerdown', 'pointerup'];
   
   function initAudioOnInteract() {
     if (isPlaying) return;
