@@ -855,14 +855,27 @@
     }
   }
 
-  // Usaha 1: Coba putar langsung (kadang berhasil jika pengaturan browser membolehkan)
+  // Usaha 1: Coba putar langsung (terkadang berhasil di browser tertentu)
   setTimeout(startAudio, 500);
 
-  // Usaha 2: Jika terblokir, putar saat pengguna mengklik/menyentuh layar pertama kali
-  document.body.addEventListener('click', function initAudio() {
-    startAudio();
-    document.body.removeEventListener('click', initAudio);
-  }, { once: true });
+  // Usaha 2: Trik Autoplay - Putar saat ada interaksi SEKECIL APAPUN (scroll, sentuh layar, klik, atau ketik)
+  const interactionEvents = ['click', 'touchstart', 'scroll', 'keydown'];
+  
+  function initAudioOnInteract() {
+    if (isPlaying) return;
+    
+    bgMusic.play().then(() => {
+      isPlaying = true;
+      musicBtn.classList.add('playing');
+      // Jika berhasil, hapus semua pendeteksi event agar memori tidak penuh
+      interactionEvents.forEach(evt => document.removeEventListener(evt, initAudioOnInteract));
+    }).catch((err) => {
+      console.log("Menunggu interaksi pengguna untuk memutar audio...");
+    });
+  }
+
+  // Pasang pendeteksi ke seluruh halaman
+  interactionEvents.forEach(evt => document.addEventListener(evt, initAudioOnInteract));
 
   // Tombol putar/jeda manual
   musicBtn.addEventListener('click', (e) => {
