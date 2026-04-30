@@ -167,20 +167,19 @@
       bottom: 2.5rem;
       left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: .5rem;
+      text-align: center;
       opacity: 0;
       animation: rise 1s 2.5s forwards;
     }
 
     .scroll-hint span {
+      display: block;
       font-size: .65rem;
       letter-spacing: .4rem;
       text-transform: uppercase;
       color: var(--soft);
-      padding-left: .4rem; /* Seimbangkan letter-spacing di sebelah kanan */
+      margin-right: -.4rem; /* Menghilangkan spasi gaib di akhir karakter */
+      margin-bottom: .5rem;
     }
 
     .scroll-arrow {
@@ -190,11 +189,12 @@
       border-bottom: 1px solid var(--gold);
       transform: rotate(45deg);
       animation: bob 2s infinite;
+      margin: 0 auto;
     }
 
     @keyframes bob {
-      0%,100% { transform: rotate(45deg) translateY(0); }
-      50%      { transform: rotate(45deg) translateY(5px); }
+      0%,100% { transform: rotate(45deg) translateY(0) translateX(0); }
+      50%      { transform: rotate(45deg) translateY(5px) translateX(5px); }
     }
 
     /* ══════════════════════════════════
