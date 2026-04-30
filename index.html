@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selamat Purna Tugas — Drs. Suratno</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Lato:wght@300;400;700&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --night:   #0d0f1a;
+      --deep:    #111829;
+      --mid:     #1c2640;
+      --gold:    #e8b84b;
+      --gold2:   #f5d98a;
+      --rose:    #e8857a;
+      --cream:   #f8f0dc;
+      --soft:    #c9b99a;
+      --white:   #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--night);
+      color: var(--cream);
+      overflow-x: hidden;
+    }
+
+    /* ── CANVAS BACKGROUND ── */
+    #sky-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── WRAPPER ── */
+    .page { position: relative; z-index: 2; }
+
+    /* ══════════════════════════════════
+       SECTION 1 — HERO
+    ══════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 60%,
+        rgba(232,184,75,0.08) 0%,
+        transparent 70%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+      font-size: .75rem;
+      letter-spacing: .5rem;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0;
+      animation: rise .9s .3s forwards;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 0 auto 2.5rem;
+      opacity: 0;
+      animation: rise .9s .5s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(1.6rem, 5vw, 3rem);
+      line-height: 1.3;
+      letter-spacing: .1em;
+      color: var(--cream);
+      opacity: 0;
+      animation: rise 1s .7s forwards;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold2);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      margin: 2.5rem auto;
+      padding: 1.2rem 3.5rem;
+      border: 1px solid rgba(232,184,75,.45);
+      border-radius: 100px;
+      background: linear-gradient(135deg, rgba(232,184,75,.12), rgba(232,184,75,.04));
+      backdrop-filter: blur(6px);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: rise 1s 1s forwards;
+    }
+
+    .hero-badge::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -120%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+      animation: sheen 3.5s 2s infinite;
+    }
+
+    @keyframes sheen {
+      0%   { left: -120%; }
+      60%  { left: 120%; }
+      100% { left: 120%; }
+    }
+
+    .hero-badge h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: clamp(1.8rem, 6vw, 3.2rem);
+      letter-spacing: .08em;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+
+    .hero-name {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3rem, 10vw, 6rem);
+      color: var(--white);
+      line-height: 1.1;
+      text-shadow: 0 0 60px rgba(232,184,75,.35);
+      opacity: 0;
+      animation: rise 1.2s 1.3s forwards;
+      margin-bottom: .5rem;
+    }
+
+    .hero-nip {
+      font-size: .8rem;
+      font-weight: 300;
+      letter-spacing: .3rem;
+      color: var(--soft);
+      opacity: 0;
+      animation: rise .9s 1.6s forwards;
+      margin-bottom: 3.5rem;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      opacity: 0;
+      animation: rise 1s 2.5s forwards;
+    }
+
+    .scroll-hint span {
+      font-size: .65rem;
+      letter-spacing: .4rem;
+      text-transform: uppercase;
+      color: var(--soft);
+      margin-right: -.4rem; /* Fix untuk letter-spacing agar rata tengah sempurna */
+    }
+
+    .scroll-arrow {
+      width: 24px;
+      height: 24px;
+      border-right: 1px solid var(--gold);
+      border-bottom: 1px solid var(--gold);
+      transform: rotate(45deg);
+      animation: bob 2s infinite;
+    }
+
+    @keyframes bob {
+      0%,100% { transform: rotate(45deg) translateY(0); }
+      50%      { transform: rotate(45deg) translateY(5px); }
+    }
+
+    /* ══════════════════════════════════
+       SECTION 2 — POEM
+    ══════════════════════════════════ */
+    .poem-section {
+      padding: 7rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .poem-section::before,
+    .poem-section::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(to bottom, transparent, var(--gold));
+      margin: 0 auto;
+    }
+    .poem-section::after {
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      margin-top: 5rem;
+    }
+
+    .section-label {
+      font-size: .7rem;
+      letter-spacing: .5rem;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 300;
+      margin-bottom: 3rem;
+    }
+
+    .poem-card {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3.5rem 2.5rem;
+      background: linear-gradient(145deg,
+        rgba(255,255,255,.04),
+        rgba(232,184,75,.04));
+      border: 1px solid rgba(232,184,75,.15);
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .poem-card::before {
+      content: '\201C';
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 10rem;
+      color: rgba(232,184,75,.08);
+      position: absolute;
+      top: -2rem;
+      left: 1.5rem;
+      line-height: 1;
+    }
+
+    .poem-lines {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.15rem, 3vw, 1.5rem);
+      font-style: italic;
+      font-weight: 300;
+      line-height: 2;
+      color: var(--cream);
+    }
+
+    .poem-lines strong {
+      font-weight: 600;
+      color: var(--gold2);
+      font-style: normal;
+    }
+
+    .poem-ornament {
+      margin: 2rem auto 0;
+      font-size: 1.2rem;
+      color: var(--gold);
+      letter-spacing: .5rem;
+    }
+
+    /* ══════════════════════════════════
+       SECTION 3 — DEDICATION
+    ══════════════════════════════════ */
+    .dedication-section {
+      padding: 5rem 2rem 7rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .dedication-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 3rem auto 0;
+    }
+
+    .ded-card {
+      padding: 2rem 1.5rem;
+      border: 1px solid rgba(232,184,75,.12);
+      border-radius: 4px;
+      background: rgba(255,255,255,.025);
+      position: relative;
+      overflow: hidden;
+      transition: border-color .4s, background .4s;
+    }
+
+    .ded-card:hover {
+      border-color: rgba(232,184,75,.35);
+      background: rgba(232,184,75,.05);
+    }
+
+    .ded-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0%; height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--rose));
+      transition: width .5s ease;
+    }
+
+    .ded-card:hover::after { width: 100%; }
+
+    .ded-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .ded-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--gold2);
+      margin-bottom: .6rem;
+    }
+
+    .ded-text {
+      font-size: .9rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--soft);
+    }
+
+    /* ══════════════════════════════════
+       SECTION 4 — WISHES
+    ══════════════════════════════════ */
+    .wishes-section {
+      padding: 5rem 2rem 6rem;
+      position: relative;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .wishes-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse,
+        rgba(232,133,122,.07) 0%,
+        transparent 65%);
+      pointer-events: none;
+    }
+
+    .wishes-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .wishes-heading {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      color: var(--gold);
+      margin-bottom: 2.5rem;
+      text-shadow: 0 0 40px rgba(232,184,75,.3);
+    }
+
+    .wishes-body {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      font-weight: 300;
+      line-height: 2.1;
+      color: var(--cream);
+    }
+
+    .wishes-body strong {
+      color: var(--gold2);
+      font-weight: 600;
+    }
+
+    /* ══════════════════════════════════
+       SECTION 5 — FOOTER / CLOSING
+    ══════════════════════════════════ */
+    .closing {
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      border-top: 1px solid rgba(232,184,75,.1);
+    }
+
+    .closing-line {
+      width: 100px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--rose), transparent);
+      margin: 0 auto 3rem;
+    }
+
+    .closing-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      font-style: italic;
+      font-weight: 300;
+      color: var(--soft);
+      line-height: 2;
+      max-width: 500px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .closing-sig {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2rem, 6vw, 3rem);
+      color: var(--gold);
+    }
+
+    .closing-sub {
+      font-size: .7rem;
+      letter-spacing: .35rem;
+      text-transform: uppercase;
+      color: var(--soft);
+      margin-top: .5rem;
+    }
+
+    .closing-dots {
+      display: flex;
+      justify-content: center;
+      gap: .5rem;
+      margin-top: 3rem;
+    }
+
+    .closing-dots span {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: .4;
+    }
+
+    .closing-dots span:nth-child(2) { opacity: .7; }
+    .closing-dots span:nth-child(3) { opacity: 1; }
+
+    /* ══════════════════════════════════
+       GLOBAL SCROLL-REVEAL
+    ══════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .9s ease, transform .9s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── KEYFRAMES ── */
+    @keyframes rise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero { padding: 3rem 1rem; }
+      .hero-title { font-size: 1.3rem; }
+      .hero-badge { 
+        padding: 1rem 1.5rem; 
+        width: 90%;
+        max-width: 400px;
+      }
+      .hero-badge h1 {
+        white-space: normal; /* Biarkan teks turun ke baris baru di HP */
+        line-height: 1.2;
+        font-size: 2.2rem;
+      }
+      .hero-name { font-size: 3rem; margin-top: 1rem; }
+      .poem-section { padding: 4rem 1rem; }
+      .poem-card  { padding: 2.5rem 1.5rem; }
+      .poem-card::before {
+        font-size: 7rem;
+        top: -1.5rem;
+        left: 0.5rem;
+      }
+      .dedication-section { padding: 4rem 1.5rem; }
+      .dedication-grid { grid-template-columns: 1fr; gap: 1rem; margin-top: 2rem; }
+      .wishes-section { padding: 4rem 1.5rem; }
+      .wishes-glow { width: 100vw; height: 300px; }
+      .closing { padding: 4rem 1.5rem; }
+      
+      .music-btn {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+      }
+    }
+
+    /* ── MUSIC TOGGLE ── */
+    .music-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 50;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(232,184,75,.15);
+      border: 1px solid rgba(232,184,75,.4);
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+      transition: all .4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 1.2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .music-btn:hover {
+      background: rgba(232,184,75,.3);
+      transform: scale(1.1);
+    }
+    .music-btn.playing {
+      animation: pulse-glow 2s infinite;
+    }
+    .music-icon {
+      animation: spin 4s linear infinite;
+      animation-play-state: paused;
+    }
+    .music-btn.playing .music-icon {
+      animation-play-state: running;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @keyframes pulse-glow {
+      0% { box-shadow: 0 0 0 0 rgba(232,184,75,0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(232,184,75,0); }
+      100% { box-shadow: 0 0 0 0 rgba(232,184,75,0); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Audio Player -->
+<audio id="bgMusic" loop autoplay>
+  <source src="vidssave.com Al-I'tiraf (Pengakuan) ..... 🤲🤲🤲 256KBPS.mp3" type="audio/mpeg">
+</audio>
+
+<button class="music-btn" id="musicBtn" aria-label="Play Music">
+  <span class="music-icon">🎵</span>
+</button>
+
+<!-- Animated Night Sky Canvas -->
+<canvas id="sky-canvas"></canvas>
+
+<div class="page">
+
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <p class="eyebrow">Keluarga Suratno Mengucapkan</p>
+    <div class="hero-divider"></div>
+
+    <p class="hero-title">
+      Terima kasih atas pengabdian &amp; dedikasi tiada tara<br>
+      <em>untuk keluarga tercinta</em>
+    </p>
+
+    <div class="hero-badge">
+      <h1>Selamat Purna Tugas</h1>
+    </div>
+
+    <h2 class="hero-name">Drs. Suratno</h2>
+    <p class="hero-nip">NIP. 19660418 200501 1 005</p>
+
+    <div class="scroll-hint">
+      <span>Gulir ke bawah</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ══ POEM ══ -->
+  <section class="poem-section">
+    <p class="section-label reveal">Sebuah Puisi Untukmu</p>
+
+    <div class="poem-card reveal">
+      <p class="poem-lines">
+        Jejak langkahmu bukan sekadar cerita,<br>
+        melainkan <strong>ukiran ilmu</strong> yang takkan pernah sirna.<br>
+        Tiap bimbingan, tiap nasihat, dan tiap kesabaran,<br>
+        akan selalu menjadi <strong>pelita di hati kami</strong>.<br><br>
+        Seperti pohon yang berakar dalam,<br>
+        cintamu tumbuh dalam setiap musim —<br>
+        tak terlihat, namun terasa,<br>
+        <strong>hadir dalam setiap hembus angin</strong> yang memeluk kami.
+      </p>
+      <p class="poem-ornament">✦ &ensp; ✦ &ensp; ✦</p>
+    </div>
+  </section>
+
+  <!-- ══ DEDICATION CARDS ══ -->
+  <section class="dedication-section">
+    <p class="section-label reveal">Nilai yang Kau Tanamkan</p>
+
+    <div class="dedication-grid">
+      <div class="ded-card reveal">
+        <span class="ded-icon">🕯️</span>
+        <p class="ded-title">Cahaya Ilmu</p>
+        <p class="ded-text">Setiap kata bijakmu adalah lilin yang menerangi jalan anak-anakmu menuju masa depan.</p>
+      </div>
+      <div class="ded-card reveal">
+        <span class="ded-icon">🌿</span>
+        <p class="ded-title">Keteguhan Hati</p>
+        <p class="ded-text">Dengan sabar dan tekun, Bapak menunjukkan bahwa pengabdian yang tulus selalu meninggalkan jejak abadi.</p>
+      </div>
+      <div class="ded-card reveal">
+        <span class="ded-icon">💛</span>
+        <p class="ded-title">Cinta Tanpa Syarat</p>
+        <p class="ded-text">Cinta Bapak bukan yang diucapkan — melainkan yang dirasakan dalam setiap tindakan dan pengorbanan.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ WISHES ══ -->
+  <section class="wishes-section">
+    <div class="wishes-glow"></div>
+    <div class="wishes-inner">
+      <h3 class="wishes-heading reveal">Doa &amp; Harapan</h3>
+      <p class="wishes-body reveal">
+        Selamat menikmati lembaran baru kehidupan, <strong>Bapak Suratno</strong>.<br>
+        Semoga setiap pagi yang Bapak sambut dipenuhi<br>
+        ketenangan dan rasa syukur.<br><br>
+        Semoga <strong>kesehatan, kebahagiaan, dan kedamaian</strong><br>
+        senantiasa menyertai setiap langkah Bapak —<br>
+        karena Bapak sungguh layak mendapatkannya.<br><br>
+        <em>Terima kasih atas segala cinta<br>
+        dan dedikasi yang tak ternilai harganya.</em>
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ CLOSING ══ -->
+  <section class="closing">
+    <div class="closing-line"></div>
+    <p class="closing-text reveal">
+      "Ketika waktu menutup satu babak panjang,<br>
+      ia membuka jendela kedamaian yang selama ini menunggu."
+    </p>
+    <p class="closing-sig reveal">Keluarga Suratno</p>
+    <p class="closing-sub reveal">Dengan sepenuh cinta &amp; kebanggaan</p>
+    <div class="closing-dots">
+      <span></span><span></span><span></span>
+    </div>
+  </section>
+
+</div><!-- /page -->
+
+<script>
+/* ─── NIGHT SKY: stars + floating embers + lanterns ─── */
+(function() {
+  const canvas = document.getElementById('sky-canvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H;
+
+  // Resize
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  /* --- Stars --- */
+  const stars = Array.from({ length: 160 }, () => ({
+    x: Math.random(),
+    y: Math.random(),
+    r: Math.random() * 1.4 + .3,
+    a: Math.random(),
+    speed: Math.random() * .008 + .003,
+    phase: Math.random() * Math.PI * 2
+  }));
+
+  /* --- Embers / petals --- */
+  class Ember {
+    constructor() { this.reset(true); }
+    reset(initial) {
+      this.x    = Math.random() * W;
+      this.y    = initial ? Math.random() * H : H + 20;
+      this.r    = Math.random() * 3 + 1;
+      this.vx   = (Math.random() - .5) * .4;
+      this.vy   = -(Math.random() * .6 + .3);
+      this.life = 0;
+      this.maxLife = Math.random() * 300 + 200;
+      this.hue  = Math.random() < .5 ? 40 : 10; // gold or rose
+    }
+    update() {
+      this.x += this.vx + Math.sin(this.life * .02) * .3;
+      this.y += this.vy;
+      this.life++;
+      if (this.life > this.maxLife || this.y < -20) this.reset(false);
+    }
+    draw() {
+      const t = this.life / this.maxLife;
+      const alpha = t < .1 ? t * 10 : t > .8 ? (1 - t) * 5 : 1;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = this.hue === 40
+        ? `rgba(232,184,75,${alpha * .7})`
+        : `rgba(232,133,122,${alpha * .5})`;
+      ctx.fill();
+    }
+  }
+
+  /* --- Lanterns --- */
+  class Lantern {
+    constructor() { this.reset(true); }
+    reset(initial) {
+      this.x    = Math.random() * W;
+      this.y    = initial ? Math.random() * H : H + 80;
+      this.size = Math.random() * 16 + 10;
+      this.vx   = (Math.random() - .5) * .25;
+      this.vy   = -(Math.random() * .35 + .2);
+      this.life = 0;
+      this.maxLife = Math.random() * 700 + 500;
+      this.glow = Math.random() * .5 + .3;
+    }
+    update() {
+      this.x  += this.vx + Math.sin(this.life * .01) * .5;
+      this.y  += this.vy;
+      this.life++;
+      if (this.life > this.maxLife || this.y < -100) this.reset(false);
+    }
+    draw() {
+      const t     = this.life / this.maxLife;
+      const alpha = t < .1 ? t * 10 : t > .8 ? (1 - t) * 5 : 1;
+      const s     = this.size;
+
+      ctx.save();
+      ctx.globalAlpha = alpha * this.glow;
+      ctx.translate(this.x, this.y);
+
+      // glow
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, s * 3.5);
+      g.addColorStop(0,   'rgba(232,184,75,.55)');
+      g.addColorStop(1,   'transparent');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 3.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // body
+      ctx.fillStyle = 'rgba(255,220,120,.85)';
+      ctx.beginPath();
+      ctx.roundRect(-s * .45, -s * .65, s * .9, s * 1.3, s * .2);
+      ctx.fill();
+
+      // top ring
+      ctx.strokeStyle = 'rgba(220,165,60,.9)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(0, -s * .65, s * .22, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // bottom fringe
+      ctx.strokeStyle = 'rgba(220,165,60,.7)';
+      ctx.lineWidth = 1;
+      for (let i = -2; i <= 2; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * s * .18, s * .65);
+        ctx.lineTo(i * s * .18, s * .65 + s * .3);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+  }
+
+  const embers   = Array.from({ length: 80  }, () => new Ember());
+  const lanterns = Array.from({ length: 12  }, () => new Lantern());
+
+  /* --- Sky gradient --- */
+  function drawSky() {
+    const scrollY = window.scrollY;
+    const p       = Math.min(scrollY / (document.body.scrollHeight - H), 1);
+
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    // top → deep night
+    g.addColorStop(0,   `hsl(${220 + p * 10}, ${40 - p * 10}%, ${8 + p * 3}%)`);
+    // bottom → warm horizon
+    g.addColorStop(.7,  `hsl(${20 - p * 5}, 30%, ${12 + p * 4}%)`);
+    g.addColorStop(1,   `hsl(${15}, 25%, ${14 + p * 6}%)`);
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  /* --- Render loop --- */
+  function tick(t) {
+    ctx.clearRect(0, 0, W, H);
+    drawSky();
+
+    // stars
+    stars.forEach(s => {
+      const a = s.a * (.5 + .5 * Math.sin(t * s.speed + s.phase));
+      ctx.beginPath();
+      ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,230,${a})`;
+      ctx.fill();
+    });
+
+    lanterns.forEach(l => { l.update(); l.draw(); });
+    embers  .forEach(e => { e.update(); e.draw(); });
+
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+/* ─── SCROLL REVEAL ─── */
+(function() {
+  const items = document.querySelectorAll('.reveal');
+  const io    = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: .15 });
+  items.forEach(el => io.observe(el));
+})();
+
+/* ─── AUDIO PLAYER ─── */
+(function() {
+  const bgMusic = document.getElementById('bgMusic');
+  const musicBtn = document.getElementById('musicBtn');
+  let isPlaying = false;
+
+  function startAudio() {
+    if (!isPlaying) {
+      bgMusic.play().then(() => {
+        isPlaying = true;
+        musicBtn.classList.add('playing');
+      }).catch((err) => {
+        console.log("Autoplay dicegah oleh browser:", err);
+      });
+    }
+  }
+
+  // Usaha 1: Coba putar langsung (kadang berhasil jika pengaturan browser membolehkan)
+  setTimeout(startAudio, 500);
+
+  // Usaha 2: Jika terblokir, putar saat pengguna mengklik/menyentuh layar pertama kali
+  document.body.addEventListener('click', function initAudio() {
+    startAudio();
+    document.body.removeEventListener('click', initAudio);
+  }, { once: true });
+
+  // Tombol putar/jeda manual
+  musicBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // Jangan picu klik body
+    if (isPlaying) {
+      bgMusic.pause();
+      musicBtn.classList.remove('playing');
+    } else {
+      bgMusic.play();
+      musicBtn.classList.add('playing');
+    }
+    isPlaying = !isPlaying;
+  });
+})();
+</script>
+</body>
+</html>
